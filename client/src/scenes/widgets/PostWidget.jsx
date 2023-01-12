@@ -30,6 +30,7 @@ const PostWidget = ({
   userPicturePath,
   likes,
   comments,
+  style,
 }) => {
   const [isComments, setIsComments] = useState(false);
   const { palette } = useTheme();
@@ -62,9 +63,39 @@ const PostWidget = ({
         subtitle={location}
         userPicturePath={userPicturePath}
       />
-      <Typography color={main} sx={{ mt: "1rem" }}>
-        {description}
-      </Typography>
+      {style ? (
+        <Box
+          sx={{
+            backgroundImage: style,
+            minHeight: "250px",
+            borderRadius: "0.75rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            mt: "1rem",
+          }}
+        >
+          <Typography
+            color={main}
+            sx={{
+              mt: "1rem",
+              color: "#fff",
+              fontWeight: 700,
+              fontSize: "1.25rem",
+              wordBreak: "break-word",
+            }}
+          >
+            {description}
+          </Typography>
+        </Box>
+      ) : (
+        <Typography
+          color={main}
+          sx={{ mt: "1rem", fontSize: "1.25rem", wordBreak: "break-word" }}
+        >
+          {description}
+        </Typography>
+      )}
 
       {picturePath && (
         <img

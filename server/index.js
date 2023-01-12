@@ -53,7 +53,7 @@ const upload = multer({ storage });
 
 //route with file
 app.post("/auth/register", upload.single("picture"), register);
-app.post("/posts", verifyToken, upload.single("picture"), createPost);
+app.post("/posts", verifyToken, upload.array("picture", 10), createPost);
 //routes
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);

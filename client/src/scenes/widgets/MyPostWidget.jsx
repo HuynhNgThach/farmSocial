@@ -24,7 +24,8 @@ import WidgetWrapper from "../../components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { setPost, setPosts } from "state";
+import { setPosts } from "state";
+import NewPostPopup from "components/NewPostPopup";
 
 const MyPostWidget = ({ picturePath }) => {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ const MyPostWidget = ({ picturePath }) => {
   const [post, setPost] = useState("");
   const { palette } = useTheme();
   const { _id } = useSelector((state) => state.user);
+  const [isOpenPopup, setIsOpenPopup] = useState(false);
   const token = useSelector((state) => state.token);
   const isNoneMobileScreens = useMediaQuery("(min-width: 1000px)");
   const mediumMain = palette.neutral.mediumMain;
@@ -43,8 +45,10 @@ const MyPostWidget = ({ picturePath }) => {
     formData.append("userId", _id);
     formData.append("description", post);
     if (image) {
-      formData.append("picture", image);
-      formData.append("picturePath", image.name);
+      for (const img of image) {
+        formData.append("picturePaths", img.name);
+        formData.append("picture", img);
+      }
     }
     const resp = await fetch(`http://localhost:3001/posts`, {
       method: "post",
@@ -73,6 +77,7 @@ const MyPostWidget = ({ picturePath }) => {
             borderRadius: "2rem",
             padding: "1rem 2rem",
           }}
+          onClick={() => setIsOpenPopup(!isOpenPopup)}
         />
       </FlexBetween>
       {isImage && (
@@ -84,8 +89,10 @@ const MyPostWidget = ({ picturePath }) => {
         >
           <Dropzone
             acceptedFiles=".jpg,.jpeg,.png"
-            multiple={false}
-            onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
+            multiple={true}
+            onDrop={(acceptedFiles) => {
+              setImage(acceptedFiles);
+            }}
           >
             {({ getRootProps, getInputProps }) => (
               <FlexBetween>
@@ -166,6 +173,7 @@ const MyPostWidget = ({ picturePath }) => {
           Post
         </Button>
       </FlexBetween>
+      <NewPostPopup isOpen={isOpenPopup} close={() => setIsOpenPopup(false)} />
     </WidgetWrapper>
   );
 };
