@@ -36,6 +36,7 @@ function HomePage() {
         <Box
           flexBasis={isNoneMobileScreens ? "42%" : undefined}
           mt={isNoneMobileScreens ? undefined : "2rem"}
+          overflow="hidden"
         >
           <MyPostWidget picturePath={picturePath} />
           <PostsWidget userId={_id} />

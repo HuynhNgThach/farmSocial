@@ -14,3 +14,7 @@ body,
 ::before {
   box-sizing: border-box;
 }
+img {
+  display: block;
+  object-fit: cover;
+}

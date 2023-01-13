@@ -77,7 +77,9 @@ const MyPostWidget = ({ picturePath }) => {
             borderRadius: "2rem",
             padding: "1rem 2rem",
           }}
-          onClick={() => setIsOpenPopup(!isOpenPopup)}
+          onClick={() => {
+            if (!isImage) setIsOpenPopup(!isOpenPopup);
+          }}
         />
       </FlexBetween>
       {isImage && (

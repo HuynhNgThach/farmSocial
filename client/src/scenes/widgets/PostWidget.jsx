@@ -13,12 +13,22 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import { styled } from "@mui/system";
 import FlexBetween from "components/FlexBetween";
 import Friend from "components/Friend";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setPost } from "state";
+import { Swiper, SwiperSlide } from "swiper/react";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+
+// import required modules
+import { Pagination, Navigation } from "swiper";
 
 const PostWidget = ({
   postId,
@@ -26,7 +36,7 @@ const PostWidget = ({
   name,
   location,
   description,
-  picturePath,
+  picturePaths,
   userPicturePath,
   likes,
   comments,
@@ -55,6 +65,25 @@ const PostWidget = ({
     const updatedPost = await resp.json();
     dispatch(setPost({ post: updatedPost }));
   };
+  const SlideImg = styled(Swiper)({
+    ".swiper-button-prev": {
+      color: palette.neutral.dark,
+      "&::after": {
+        fontSize: "20px",
+        fontWeight: "700",
+      },
+    },
+    ".swiper-button-next": {
+      color: palette.neutral.dark,
+      "&::after": {
+        fontSize: "20px",
+        fontWeight: "700",
+      },
+    },
+    ".swiper-pagination-bullet": {
+      backgroundColor: palette.primary.light,
+    },
+  });
   return (
     <WidgetWrapper sx={{ mt: "1.5rem" }}>
       <Friend
@@ -97,15 +126,43 @@ const PostWidget = ({
         </Typography>
       )}
 
-      {picturePath && (
-        <img
-          src={`http://localhost:3001/assets/${picturePath}`}
-          width={"100%"}
-          height="auto"
-          alt=""
-          style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-        />
-      )}
+      {picturePaths &&
+        (picturePaths.lengths === 1 ? (
+          <img
+            src={`http://localhost:3001/assets/${picturePaths[0]}`}
+            width={"100%"}
+            height="auto"
+            alt=""
+            style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
+          />
+        ) : (
+          <Box sx={{}}>
+            <SlideImg
+              pagination={true}
+              navigation={true}
+              modules={[Pagination, Navigation]}
+            >
+              {picturePaths.map((pic, k) => (
+                <SwiperSlide key={k}>
+                  <div style={{ width: "100%", height: "300px" }}>
+                    <img
+                      src={`http://localhost:3001/assets/${pic}`}
+                      style={{
+                        borderRadius: "0.75rem",
+                        marginTop: "0.75rem",
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                        objectPosition: "center",
+                      }}
+                      alt=""
+                    />
+                  </div>
+                </SwiperSlide>
+              ))}
+            </SlideImg>
+          </Box>
+        ))}
       <FlexBetween mt="0.25rem">
         <FlexBetween gap="1rem">
           <FlexBetween gap="0.1rem">
